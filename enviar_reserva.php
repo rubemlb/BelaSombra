@@ -1,7 +1,32 @@
 <?php
 
-$expected = ['arrival_date', 'departure_date', 'rooms', 'adults','name','surname','email','num_doc','telefone','address','origin_country','nationality','travel_motive','info','number_extra_bed'];
-$required = ['arrival_date', 'departure_date', 'rooms', 'adults','name','surname','email','num_doc','telefone','address'];
+$captcha;
+if(isset($_POST['g-recaptcha-response'])){
+  $captcha=$_POST['g-recaptcha-response'];
+}
+if(!$captcha){
+  echo "<script type='text/javascript'>
+            alert('Por favor confirme o Captcha!');
+            location='index.html';
+        </script>";
+  exit;
+}
+
+$secretKey = "6LeBVA0UAAAAANpmWfJ7J1DBdeCW93SUPGYAZjr4";
+
+$ip = $_SERVER['REMOTE_ADDR'];
+$response=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$secretKey."&response=".$captcha."&remoteip=".$ip);
+$responseKeys = json_decode($response,true);
+if(intval($responseKeys["success"]) !== 1) {
+  echo "<script type='text/javascript'>
+            alert('Esta submissão é um Spam!');
+            location='index.html';
+        </script>";
+  exit;
+}else{
+    if((include "/data/customers/projetos.prime.cv/httpdocs/bookingodoo_teste/reservaodoo.php") == 0){
+        $expected = ['arrival_date', 'departure_date', 'num_rooms','num_adults','num_children','room_type','name','surname','email','doc_num', 'telephone', 'address','origin_country','nationality','travel_motive','info','number_extra_bed','site'];
+        $required = ['arrival_date', 'departure_date', 'num_rooms','num_adults','name','surname','email','doc_num', 'telephone', 'address'];
 
 // check $_POST array
 foreach ($_POST as $key => $value) {
@@ -33,7 +58,7 @@ if (!$errors && !$missing) {
 
     // set up replacements for decorator plugin
     $replacements = [
-    'belasombra@gmail.com' =>
+    'rubem.barros@primeconsulting.org' =>
             ['#subject#' => 'Pensão Bela Sombra Reservation Request',
                 '#greeting#' => "Thanks $name, your booking request was received!"],
         $email =>
@@ -152,3 +177,9 @@ EOT;
         echo $e->getMessage();
     }
 }
+}}else{
+        echo "<script type='text/javascript'>
+                   alert('A sua reserva não pude ser feita!');
+                   location='index.html';
+              </script>";
+    }}

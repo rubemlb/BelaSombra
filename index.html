@@ -45,17 +45,6 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <!-- data in/out -->
-    <script>
-        function reserv()
-        {
-           $('#arrival_date').val($('#data_chegada').val());
-           $('#departure_date').val($('#data_partida').val());
-           $('#num_rooms').val($('#quarto').val());
-           $('#num_adults').val($('#adultos').val());
-         }
-    </script>
-
     <style type="text/css">
         div#google_translate_element div.goog-te-gadget-simple{background-color: transparent; border: transparent;}
         div#google_translate_element div.goog-te-gadget-simple a.goog-te-menu-value span{color:white}
@@ -87,13 +76,6 @@
         includedLanguages: 'ca,da,de,el,en,es,fr,it,ja,ko,nl,pl,pt,ru,sv,tl',
         layout: google.translate.TranslateElement.InlineLayout.SIMPLE
         }, 'google_translate_element');
-    }
-
-    function reserv(){
-        $('#arrival_date').val($('#data_chegada').val());
-        $('#departure_date').val($('#data_partida').val());
-        $('#rooms').val($('#quarto').val());
-        $('#adults').val($('#adultos').val());
     }
 
 
@@ -1644,74 +1626,49 @@
       ga('create', 'UA-81807682-30', 'auto');
       ga('send', 'pageview');
     </script>
-    
     <!-- end google analytics-->
 
-    <!-- no data under -->
-    <script>
-       var dateToday = new Date();
-       var dates = $("#arrival_date,#departure_date").datepicker({
-           /*changeMonth: true,
-           numberOfMonths: 1,*/
-           minDate: dateToday,
-           onSelect: function(selectedDate) {
-               var option = this.id == "arrival_date" ? "minDate" : "maxDate",
-                   instance = $(this).data("datepicker"),
-                   date = $.datepicker.parseDate(instance.settings.dateFormat || $.datepicker._defaults.dateFormat, selectedDate, instance.settings);
-               dates.not(this).datepicker("option", option, date);
-           }
-       });
-       var dates1 = $("#data_chegada,#data_partida").datepicker({
-           /*changeMonth: true,
-           numberOfMonths: 1,*/
-           minDate: dateToday,
-           onSelect: function(selectedDate) {
-               var option = this.id == "data_chegada" ? "minDate" : "maxDate",
-                   instance = $(this).data("datepicker"),
-                   date = $.datepicker.parseDate(instance.settings.dateFormat || $.datepicker._defaults.dateFormat, selectedDate, instance.settings);
-               dates1.not(this).datepicker("option", option, date);
-           }
-       });
-   </script>
-   <!---start-date-piker---->
-   <script>
+    
+  	<!-- no data under and plus -->
+	<script>
+				$("#data_chegada,#arrival_date").datepicker({
+		    minDate: 0,
+		    onSelect: function(dateText, inst) {
+		       var actualDate = new Date(dateText);
+		       var newDate = new Date(actualDate.getFullYear(), actualDate.getMonth(), actualDate.getDate()+1);
+		        $('#data_partida,#departure_date').datepicker('option', 'minDate', newDate );
+		    }
+		});
+
+			$("#data_partida,departure_date").datepicker({
+		    minDate: 1,
+		    onSelect: function(dateText, inst) {
+		       var actualDate = new Date(dateText);
+		       var newDate = new Date(actualDate.getFullYear(), actualDate.getMonth(), actualDate.getDate());
+		        $('#data_partida,#departure_date').datepicker('option', 'minDate', newDate );
+		    }
+		});
+			
+		</script>
+   	<!---start-date-piker -->
+
+   	<script>
        $(function() {
            $( "#data_chegada,#data_partida,#arrival_date,#departure_date" ).datepicker({
                dateFormat: "dd-mm-yy"
            });
        });
-   </script>
+   	</script>
+	<!---/End-date-piker---->
 
-
-    <script>
-                $("#arrival_date").datepicker({
-            minDate: 0,
-            onSelect: function(dateText, inst) {
-               var actualDate = new Date(dateText);
-               var newDate = new Date(actualDate.getFullYear(), actualDate.getMonth(), actualDate.getDate()+1);
-                $('#departure_date').datepicker('option', 'minDate', newDate );
-            }
-        });
-
-            $("#departure_date").datepicker({
-            minDate: 1,
-            onSelect: function(dateText, inst) {
-               var actualDate = new Date(dateText);
-               var newDate = new Date(actualDate.getFullYear(), actualDate.getMonth(), actualDate.getDate());
-                $('#departure_date').datepicker('option', 'minDate', newDate );
-            }
-        });
-            
-    </script>
-
-    <script>
+  <script>
         function reserv()
         {
            $('#arrival_date').val($('#data_chegada').val());
            $('#departure_date').val($('#data_partida').val());
            $('#num_rooms').val($('#quarto').val());
            $('#num_adults').val($('#adultos').val());
-         }
+        }
     </script>
 
 </body>
